@@ -5,6 +5,8 @@ import time
 
 # Load the oauth_settings.yml file
 stream = open('oauth_settings.yml', 'r')
+
+# Setting available for all, which import this module!
 settings = yaml.load(stream, yaml.SafeLoader)
 
 def load_cache(request):

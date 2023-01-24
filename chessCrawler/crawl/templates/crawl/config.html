@@ -1,0 +1,25 @@
+{% extends "crawl/layout.html" %}
+{% block content %}
+<div class="container">
+
+    <!--Simple Form-->
+    <h2 class="my-4">Select Config File</h2>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+          <input type="file" name="configFile" accept=".yml">
+          <br>
+          <button class="btn btn-dark my-4" type="submit">Load</button>
+    </form>
+
+    <h2 class="my-4">Config File</h2>
+    <div class="row">
+        {% if json %}
+            {{ json }}
+        {% else %}
+            <p>No File selected</p>
+        {% endif %}
+    </div>
+
+  </div>
+
+{% endblock %}

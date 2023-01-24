@@ -5,6 +5,8 @@ from datetime import datetime, timedelta
 from dateutil import tz, parser
 from crawl.graph_helper import get_user
 from crawl.auth_helper import get_sign_in_flow, get_token_from_code, store_user, remove_user_and_token, get_token
+import yaml
+import msal
 
 def initialize_context(request):
     context = {}
@@ -20,13 +22,21 @@ def initialize_context(request):
     context['user'] = request.session.get('user', {'is_authenticated': False})
     return context
 
+def config(request):
+    if request.method == 'POST' and request.FILES['configFile']:
+        settings = request.FILES['configFile'].read()
+        ySettings = yaml.load(settings.decode('utf-8'), Loader=yaml.FullLoader)
+        ## print(ySettings['app_id'])
+
+        return render(request, 'crawl/config.html', {'json': ySettings})
+    return render(request, 'crawl/config.html')
+
 def home(request):
     context = initialize_context(request)
-
     return render(request, 'crawl/home.html', context)
 
 def sign_in(request):
-      # Get the sign-in flow
+    # Get the sign-in flow
     flow = get_sign_in_flow()
     # Save the expected flow so we can use it in the callback
     try:
@@ -37,7 +47,7 @@ def sign_in(request):
     return HttpResponseRedirect(flow['auth_uri'])
 
 def callback(request):
-      # Make the token request
+    # Make the token request
     result = get_token_from_code(request)
    
     #Get the user's profile
@@ -47,8 +57,7 @@ def callback(request):
     return HttpResponseRedirect(reverse('home'))
 
 def sign_out(request):
-      # Clear out the user and token
-  remove_user_and_token(request)
-
-  return HttpResponseRedirect(reverse('home'))
+    # Clear out the user and token
+    remove_user_and_token(request)
+    return HttpResponseRedirect(reverse('home'))
 

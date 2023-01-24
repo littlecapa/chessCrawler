@@ -1,13 +1,27 @@
 {% extends "crawl/layout.html" %}
 {% block content %}
 <div class="jumbotron">
+  {% csrf_token %}
   <h1>Python Chess Crawler</h1>
   <p class="lead">This sample app shows how to use the Microsoft Graph API to access a user's data from Python</p>
   {% if user.is_authenticated %}
     <h4>Welcome {{ user.name }}!</h4>
     <p>Use the navigation bar at the top of the page to get started.</p>
   {% else %}
-    <a href="{% url 'signin' %}" class="btn btn-primary btn-large">Click here to sign in</a>
+    <div class="form-group">
+      <label>App-ID:</label>
+      <input class="form-control" name="ev-subject" type="text">
+    </div>
+    <div class="form-group">
+      <label>App-Secret:</label>
+      <input class="form-control" name="ev-subject" type="text">
+    </div>
+  
+    <input type="file" name="Loader" label="Load Config" accept=".yml">
+    <br>
+    <br>
+    <a href="{% url 'signin' %}" class="btn btn-primary btn-large" {% if not enable %}disabled{%endif%}>Click here to sign in</a>
   {% endif %}
+
 </div>
 {% endblock %}
